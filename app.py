@@ -12,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for modern styling
+# Custom CSS for modern styling with better visibility
 st.markdown("""
 <style>
     .main {
@@ -20,30 +20,31 @@ st.markdown("""
     }
     
     .stApp {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     }
     
     .css-1d391kg {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(10px);
         border-radius: 15px;
         padding: 20px;
         margin: 10px 0;
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
     
     .metric-card {
-        background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+        background: linear-gradient(135deg, #4CAF50, #45a049);
         color: white;
         padding: 20px;
         border-radius: 15px;
         text-align: center;
         margin: 10px 0;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
     }
     
     .energy-result {
-        background: linear-gradient(135deg, #00b894, #00a085);
+        background: linear-gradient(135deg, #2196F3, #1976D2);
         color: white;
         padding: 30px;
         border-radius: 20px;
@@ -53,7 +54,7 @@ st.markdown("""
     }
     
     .section-header {
-        background: linear-gradient(90deg, #667eea, #764ba2);
+        background: linear-gradient(90deg, #3f51b5, #303f9f);
         color: white;
         padding: 15px;
         border-radius: 10px;
@@ -64,28 +65,72 @@ st.markdown("""
     }
     
     .info-box {
-        background: linear-gradient(135deg, #fdcb6e, #e17055);
+        background: linear-gradient(135deg, #FF9800, #F57C00);
         color: white;
         padding: 15px;
         border-radius: 10px;
         margin: 10px 0;
-        border-left: 5px solid #e17055;
+        border-left: 5px solid #E65100;
     }
     
     .stSelectbox > div > div {
-        background: rgba(255, 255, 255, 0.9);
+        background: rgba(255, 255, 255, 0.95);
         border-radius: 10px;
+        border: 1px solid #ddd;
     }
     
     .stTextInput > div > div > input {
-        background: rgba(255, 255, 255, 0.9);
+        background: rgba(255, 255, 255, 0.95);
         border-radius: 10px;
+        border: 1px solid #ddd;
+        color: #333;
     }
     
     .stRadio > div {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.9);
         border-radius: 10px;
         padding: 15px;
+        border: 1px solid #ddd;
+    }
+    
+    .stCheckbox > label {
+        color: #333;
+        font-weight: 500;
+    }
+    
+    .stRadio > div > label {
+        color: #333;
+        font-weight: 500;
+    }
+    
+    .stNumberInput > div > div > input {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        color: #333;
+    }
+    
+    .stSelectbox > div > div > div {
+        color: #333;
+    }
+    
+    /* Sidebar styling */
+    .css-1d391kg {
+        background: rgba(255, 255, 255, 0.95);
+    }
+    
+    /* Make sure all text is readable */
+    .stMarkdown, .stText, p, div, span {
+        color: #333;
+    }
+    
+    /* Fix metric values */
+    .metric-container {
+        background: white;
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        margin: 5px 0;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -93,8 +138,8 @@ st.markdown("""
 # Title and header
 st.markdown("""
 <div style="text-align: center; margin-bottom: 30px;">
-    <h1 style="color: white; font-size: 3rem; margin-bottom: 10px;">⚡ Energy Consumption Calculator</h1>
-    <p style="color: rgba(255, 255, 255, 0.8); font-size: 1.2rem;">Calculate your home's energy consumption with our smart calculator</p>
+    <h1 style="color: #2c3e50; font-size: 3rem; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">⚡ Energy Consumption Calculator</h1>
+    <p style="color: #34495e; font-size: 1.2rem; font-weight: 500;">Calculate your home's energy consumption with our smart calculator</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -271,13 +316,37 @@ if page == "🏠 Home Calculator":
         base_energy = 2.4 if data['facility'] == "1BHK" else 3.6 if data['facility'] == "2BHK" else 4.8
         
         with col1:
-            st.metric("🏠 Base Consumption", f"{base_energy} kW", f"{data['facility']}")
+            st.markdown("""
+            <div class="metric-container">
+                <h4 style="color: #2c3e50; margin: 0;">🏠 Base Consumption</h4>
+                <h3 style="color: #e74c3c; margin: 5px 0;">{:.1f} kW</h3>
+                <p style="color: #7f8c8d; margin: 0;">{}</p>
+            </div>
+            """.format(base_energy, data['facility']), unsafe_allow_html=True)
         with col2:
-            st.metric("❄️ AC", f"{3 if data['ac'] else 0} kW", "Active" if data['ac'] else "Inactive")
+            st.markdown("""
+            <div class="metric-container">
+                <h4 style="color: #2c3e50; margin: 0;">❄️ AC</h4>
+                <h3 style="color: #e74c3c; margin: 5px 0;">{} kW</h3>
+                <p style="color: #7f8c8d; margin: 0;">{}</p>
+            </div>
+            """.format(3 if data['ac'] else 0, "Active" if data['ac'] else "Inactive"), unsafe_allow_html=True)
         with col3:
-            st.metric("🧊 Fridge", f"{3 if data['fridge'] else 0} kW", "Active" if data['fridge'] else "Inactive")
+            st.markdown("""
+            <div class="metric-container">
+                <h4 style="color: #2c3e50; margin: 0;">🧊 Fridge</h4>
+                <h3 style="color: #e74c3c; margin: 5px 0;">{} kW</h3>
+                <p style="color: #7f8c8d; margin: 0;">{}</p>
+            </div>
+            """.format(3 if data['fridge'] else 0, "Active" if data['fridge'] else "Inactive"), unsafe_allow_html=True)
         with col4:
-            st.metric("🧺 Washing Machine", f"{3 if data['wm'] else 0} kW", "Active" if data['wm'] else "Inactive")
+            st.markdown("""
+            <div class="metric-container">
+                <h4 style="color: #2c3e50; margin: 0;">🧺 Washing Machine</h4>
+                <h3 style="color: #e74c3c; margin: 5px 0;">{} kW</h3>
+                <p style="color: #7f8c8d; margin: 0;">{}</p>
+            </div>
+            """.format(3 if data['wm'] else 0, "Active" if data['wm'] else "Inactive"), unsafe_allow_html=True)
 
 elif page == "📈 Energy Analysis":
     st.markdown("""
@@ -315,10 +384,12 @@ elif page == "📈 Energy Analysis":
             fig_pie.update_traces(marker=dict(colors=colors))
             fig_pie.update_layout(
                 title="Energy Consumption Breakdown",
+                title_font_color="#2c3e50",
                 showlegend=True,
                 height=400,
-                paper_bgcolor='rgba(0,0,0,0)',
-                plot_bgcolor='rgba(0,0,0,0)'
+                paper_bgcolor='rgba(255,255,255,0.95)',
+                plot_bgcolor='rgba(255,255,255,0.95)',
+                font=dict(color="#2c3e50")
             )
             st.plotly_chart(fig_pie, use_container_width=True)
         
@@ -340,8 +411,10 @@ elif page == "📈 Energy Analysis":
             )
             fig_bar.update_layout(
                 height=400,
-                paper_bgcolor='rgba(0,0,0,0)',
-                plot_bgcolor='rgba(0,0,0,0)'
+                title_font_color="#2c3e50",
+                paper_bgcolor='rgba(255,255,255,0.95)',
+                plot_bgcolor='rgba(255,255,255,0.95)',
+                font=dict(color="#2c3e50")
             )
             st.plotly_chart(fig_bar, use_container_width=True)
         
@@ -424,8 +497,8 @@ elif page == "💡 Tips & Info":
 # Footer
 st.markdown("---")
 st.markdown("""
-<div style="text-align: center; color: rgba(255, 255, 255, 0.6); margin-top: 30px;">
-    <p>⚡ Energy Consumption Calculator | Built with Streamlit | © 2024</p>
-    <p>💡 Save energy, save money, save the planet!</p>
+<div style="text-align: center; color: #7f8c8d; margin-top: 30px;">
+    <p style="font-size: 1.1rem; margin-bottom: 10px;">⚡ Energy Consumption Calculator | Built with Streamlit | © 2024</p>
+    <p style="font-size: 1rem; color: #27ae60; font-weight: 500;">💡 Save energy, save money, save the planet!</p>
 </div>
 """, unsafe_allow_html=True)
